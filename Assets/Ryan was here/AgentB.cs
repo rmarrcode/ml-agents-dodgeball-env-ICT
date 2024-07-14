@@ -4,21 +4,25 @@ using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
+using Unity.MLAgents.SideChannels;
 
 public class AgentB : Agent
 {
     private Rigidbody agentRigidbody;
-    private VisibilityPrecomputation visibilityPrecomputation;
     public AgentA otherAgent; 
     public GameObject plane;
+    private float moveCooldown = 0.2f;
+    private float nextMoveTime = 0f;
+    public float viewAngle = 90f;
+    public LayerMask obstacleMask;
+    public LayerMask agentMask;
+    public float viewDistance = 100f;
+    private DebugSideChannel debugSideChannel;
 
     void Start()
     {
-        visibilityPrecomputation = VisibilityPrecomputation.Instance;
-        if (visibilityPrecomputation == null)
-        {
-            Debug.LogError("VisibilityPrecomputation instance not found!");
-        }
+        obstacleMask = LayerMask.GetMask("obstacleMask");
+        agentMask = LayerMask.GetMask("agent");
     }
 
     public override void Initialize()
@@ -30,7 +34,15 @@ public class AgentB : Agent
         }
         agentRigidbody.freezeRotation = true;
         agentRigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-        //visibilityPrecomputation = FindObjectOfType<VisibilityPrecomputation>();
+
+        Renderer planeRenderer = plane.GetComponent<Renderer>();
+        if (planeRenderer != null)
+        {
+            planeRenderer.material.color = new Color(0.23f, 0.23f, 0.23f, 1f); 
+        }
+        //var debugSideChannel = new DebugSideChannel();
+        //SideChannelManager.RegisterSideChannel(debugSideChannel);
+        //debugSideChannel.SendDebugMessage("AgentB Init");
     }
 
     private HashSet<Vector3> obstacles = new HashSet<Vector3>
@@ -53,14 +65,11 @@ public class AgentB : Agent
 
     public override void OnEpisodeBegin()
     {
-        Vector3 testPosition = new Vector3(4.5f, .5f, .5f);
-        Vector3 testAngle = new Vector3(0, 90, 0);
+        Vector3 testPosition = new Vector3(4.5f, .5f, 1.5f);
+        Vector3 testAngle = new Vector3(0f, 180f, 0f);
 
         transform.localPosition = testPosition;
         transform.localEulerAngles = testAngle;
-
-        //Renderer planeRenderer = plane.GetComponent<Renderer>();
-        //planeRenderer.material.color = new Color(0.23f, 0.23f, 0.23f, 1.0f); 
     }
 
     public override void CollectObservations(VectorSensor sensor)
@@ -69,11 +78,9 @@ public class AgentB : Agent
         sensor.AddObservation(transform.localEulerAngles);
     }
 
-    private float moveCooldown = 0.2f;
-    private float nextMoveTime = 0f;
-
     public override void OnActionReceived(ActionBuffers actions)
     {
+        //debugSideChannel.SendDebugMessage("AgentB action received");
         if (Time.time < nextMoveTime)
         {
             return;
@@ -123,13 +130,14 @@ public class AgentB : Agent
             }
         }
 
-        if (IsOtherAgentVisible() && IsVisibleToOtherAgent()) {
+        bool isOtherAgentVisible = IsOtherAgentVisible();
+        if (isOtherAgentVisible && otherAgent.IsOtherAgentVisible()) {
             Debug.Log("TIE");
             StartCoroutine(ChangePlaneColorTemporarily(Color.black, .5f));
             Tie();
             otherAgent.Tie();
         }
-        else if (IsOtherAgentVisible()) 
+        else if (isOtherAgentVisible) 
         {
             Debug.Log("B WINS");
             StartCoroutine(ChangePlaneColorTemporarily(Color.blue, .5f));
@@ -137,19 +145,36 @@ public class AgentB : Agent
             SetReward(1f);
             EndEpisode();
         }
-        
     }
 
-    private bool IsOtherAgentVisible()
+    public bool IsOtherAgentVisible()
     {
-        bool visible = visibilityPrecomputation.AgentXSpotsAgentY(transform.localPosition, transform.localEulerAngles, otherAgent.transform.localPosition);
-        return visible;
-    }
+        Vector3 agent_position = transform.localPosition;
+        Vector3 agent_angle = transform.localEulerAngles;
+        Vector3 agent_direction = Quaternion.Euler(agent_angle) * Vector3.forward;
 
-    private bool IsVisibleToOtherAgent()
-    {
-        bool visible = visibilityPrecomputation.AgentXSpotsAgentY(otherAgent.transform.localPosition, otherAgent.transform.localEulerAngles, transform.localPosition);
-        return visible;
+        Vector3 enemy_position = otherAgent.transform.localPosition;
+        Vector3 rayDirection = (enemy_position - agent_position).normalized;
+        float angleToTarget = Vector3.Angle(agent_direction, rayDirection);
+        float halfAngle = viewAngle / 2f;
+
+        if (angleToTarget <= halfAngle) 
+        {
+            bool hits_wall = Physics.Raycast(agent_position, rayDirection, out RaycastHit wall_ray, viewDistance, obstacleMask);
+            bool hits_agent = Physics.Raycast(agent_position, rayDirection, out RaycastHit agent_ray, viewDistance, agentMask);
+            if (hits_wall && hits_agent)
+            {
+                if (Vector3.Distance(agent_position, wall_ray.point) > Vector3.Distance(agent_position, agent_ray.point)) 
+                {
+                    return true;
+                }
+            }
+            else if (hits_agent)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void Eliminate()

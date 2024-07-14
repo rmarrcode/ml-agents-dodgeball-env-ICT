@@ -7,6 +7,8 @@ from mlagents_envs.base_env import ActionTuple
 # import torch.distributions as D
 from torch.distributions import Categorical
 import numpy as np
+import sys
+from debug_side_channel import DebugSideChannel
 
 TRAINING_STEPS = 10000
 OBSERVATION_SIZE = 6
@@ -14,7 +16,6 @@ ACTION_SIZE = 5
 HIDDEN_SIZE = 128
 LEARNING_RATE = .001
 UPDATE_PERIOD = 100
-
 AGENT_ID_A = 0
 AGENT_ID_B = 1
 NO_AGENTS = 2
@@ -25,6 +26,8 @@ TIME_SCALE = 2.0
 # state
 # 10 x 10 grid 
 # 0 = nothing 1 = wall 2 = agent position
+debug_side_channel = DebugSideChannel()
+
 
 class ReplayBuffer():
     def __init__(self):
@@ -107,14 +110,14 @@ class Driver():
     def transition_tuple(self, agent_id):
         behavior_name = self.behavior_registry[agent_id]
         decision_steps, terminal_steps = self.env.get_steps(behavior_name)
-        print(f'decision_steps {decision_steps}')
-        print(f'terminal_steps {terminal_steps}')
+        if len(decision_steps.reward) > 0:
+            if decision_steps.reward[0] == 1:
+                self.score_board[agent_id] = self.score_board[agent_id] + 1
+                sys.stdout.write("\r" + f"Agent A - Red - 0 {self.score_board[agent_id]} : Agent B - Blue - 1 {self.score_board[agent_id]}")
+                sys.stdout.flush()
         state = decision_steps.obs[0]
         reward = terminal_steps.reward
-        if reward > 0:
-            print(f'agent: {agent_id} got reward: {reward}')
-            self.score_board[agent_id] = self.score_board[agent_id] + 1
-            print(self.score_board)
+
         done = len(terminal_steps) > 0
         if done:
             self.env.reset()
@@ -149,12 +152,18 @@ class Driver():
         params = list(self.agent_registry[AGENT_ID_A].parameters()) + list(self.agent_registry[AGENT_ID_B].parameters()) 
         opt = optim.Adam(params, lr=LEARNING_RATE)
 
+        #self.env.reset()
         for episode in range(TRAINING_STEPS):
             # Agent actions
             [self.replay_buffer_resistry[AGENT_ID].add(self.transition_tuple(AGENT_ID)) for AGENT_ID in range(NO_AGENTS)]
             done = any([self.replay_buffer_resistry[AGENT_ID].done() for AGENT_ID in range(NO_AGENTS)])
             if done:
                 self.env.reset()
+            
+            debug_messages = debug_side_channel.get_and_clear_messages()
+            for message in debug_messages:
+                print(f"Received from Unity: {message}")
+
             # Agent B action
             # decision_steps_a, terminal_steps_a = env.get_steps(behavior_name_a)
             # state = decision_steps_a.obs[0]
