@@ -40,9 +40,9 @@ public class AgentB : Agent
         {
             planeRenderer.material.color = new Color(0.23f, 0.23f, 0.23f, 1f); 
         }
-        //var debugSideChannel = new DebugSideChannel();
-        //SideChannelManager.RegisterSideChannel(debugSideChannel);
-        //debugSideChannel.SendDebugMessage("AgentB Init");
+        
+        debugSideChannel = new DebugSideChannel();
+        SideChannelManager.RegisterSideChannel(debugSideChannel);
     }
 
     private HashSet<Vector3> obstacles = new HashSet<Vector3>
@@ -65,11 +65,13 @@ public class AgentB : Agent
 
     public override void OnEpisodeBegin()
     {
-        Vector3 testPosition = new Vector3(4.5f, .5f, 1.5f);
-        Vector3 testAngle = new Vector3(0f, 180f, 0f);
+        Vector3 testPosition = new Vector3(5.5f, .5f, 1.5f);
+        Vector3 testAngle = new Vector3(0f, 0f, 0f);
 
         transform.localPosition = testPosition;
         transform.localEulerAngles = testAngle;
+
+        
     }
 
     public override void CollectObservations(VectorSensor sensor)
@@ -80,13 +82,15 @@ public class AgentB : Agent
 
     public override void OnActionReceived(ActionBuffers actions)
     {
-        //debugSideChannel.SendDebugMessage("AgentB action received");
+        int action = actions.DiscreteActions[0];
+        if (action == 0) {
+            return;
+        }
         if (Time.time < nextMoveTime)
         {
             return;
         }
         nextMoveTime = Time.time + moveCooldown;
-        int action = actions.DiscreteActions[0];
         Vector3 currentPosition = transform.localPosition;
         float moveStep = 1f;
         Vector3 moveDirection = Vector3.zero;
@@ -141,8 +145,8 @@ public class AgentB : Agent
         {
             Debug.Log("B WINS");
             StartCoroutine(ChangePlaneColorTemporarily(Color.blue, .5f));
+            SetReward(1.0f);
             otherAgent.Eliminate();
-            SetReward(1f);
             EndEpisode();
         }
     }

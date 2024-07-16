@@ -65,6 +65,8 @@ public class AgentA : Agent
 
         transform.localPosition = testPosition;
         transform.localEulerAngles = testAngle;
+
+
     }
 
     public override void CollectObservations(VectorSensor sensor)
@@ -72,8 +74,6 @@ public class AgentA : Agent
         sensor.AddObservation(transform.localPosition);
         sensor.AddObservation(transform.localEulerAngles);
     }
-
-
 
     public override void OnActionReceived(ActionBuffers actions)
     {
@@ -137,8 +137,8 @@ public class AgentA : Agent
         {
             Debug.Log("A WINS");
             StartCoroutine(ChangePlaneColorTemporarily(Color.red, .5f));
+            SetReward(1.0f);
             otherAgent.Eliminate();
-            SetReward(1f);
             EndEpisode();
         }
         
@@ -173,7 +173,6 @@ public class AgentA : Agent
         }
         return false;
     }
-
 
     public void Eliminate()
     {
