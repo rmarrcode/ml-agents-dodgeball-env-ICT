@@ -65,13 +65,17 @@ public class AgentB : Agent
 
     public override void OnEpisodeBegin()
     {
-        Vector3 testPosition = new Vector3(5.5f, .5f, 1.5f);
-        Vector3 testAngle = new Vector3(0f, 0f, 0f);
+        Vector3 testPosition = new Vector3(4.5f, .5f, 1.5f);
+        Vector3 testAngle = new Vector3(0f, 180f, 0f);
 
         transform.localPosition = testPosition;
         transform.localEulerAngles = testAngle;
 
-        
+        Renderer planeRenderer = plane.GetComponent<Renderer>();
+        if (planeRenderer != null)
+        {
+            planeRenderer.material.color = new Color(0.23f, 0.23f, 0.23f, 1f); 
+        }
     }
 
     public override void CollectObservations(VectorSensor sensor)

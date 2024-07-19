@@ -66,7 +66,11 @@ public class AgentA : Agent
         transform.localPosition = testPosition;
         transform.localEulerAngles = testAngle;
 
-
+        Renderer planeRenderer = plane.GetComponent<Renderer>();
+        if (planeRenderer != null)
+        {
+            planeRenderer.material.color = new Color(0.23f, 0.23f, 0.23f, 1f); 
+        }
     }
 
     public override void CollectObservations(VectorSensor sensor)
@@ -77,12 +81,15 @@ public class AgentA : Agent
 
     public override void OnActionReceived(ActionBuffers actions)
     {
+        int action = actions.DiscreteActions[0];
+        if (action == 0) {
+            return;
+        }
         if (Time.time < nextMoveTime)
         {
             return;
         }
         nextMoveTime = Time.time + moveCooldown;
-        int action = actions.DiscreteActions[0];
         Vector3 currentPosition = transform.localPosition;
         float moveStep = 1f;
         Vector3 moveDirection = Vector3.zero;
