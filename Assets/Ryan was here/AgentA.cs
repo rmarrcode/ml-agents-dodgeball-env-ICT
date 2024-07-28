@@ -4,6 +4,7 @@ using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
+using Unity.MLAgents.SideChannels;
 
 public class AgentA : Agent
 {
@@ -16,6 +17,8 @@ public class AgentA : Agent
     public LayerMask obstacleMask;
     public LayerMask agentMask;
     public float viewDistance = 100f;
+    public int timeStep = 0;
+    private DebugSideChannel debugSideChannel;
 
     void Start()
     {
@@ -38,18 +41,18 @@ public class AgentA : Agent
         {
             planeRenderer.material.color = new Color(0.23f, 0.23f, 0.23f, 1f); 
         }
+        debugSideChannel = new DebugSideChannel();
+        SideChannelManager.RegisterSideChannel(debugSideChannel);
     }
 
     private HashSet<Vector3> obstacles = new HashSet<Vector3>
     {
-        new Vector3(3f, 0f, 0f),
         new Vector3(3f, 0f, 1f),
         new Vector3(3f, 0f, 2f),
         new Vector3(3f, 0f, 3f),
         new Vector3(3f, 0f, 4f),
         new Vector3(3f, 0f, 5f),
         new Vector3(4f, 0f, 7f),
-        new Vector3(6f, 0f, 9f),
         new Vector3(6f, 0f, 8f),
         new Vector3(6f, 0f, 7f),
         new Vector3(6f, 0f, 6f),
@@ -60,8 +63,9 @@ public class AgentA : Agent
 
     public override void OnEpisodeBegin()
     {
-        Vector3 testPosition = new Vector3(8.5f, .5f, 9.5f);
+        Vector3 testPosition = new Vector3(5.5f, .5f, 1.5f);
         Vector3 testAngle = new Vector3(0, 0, 0);
+        timeStep = 0;
 
         transform.localPosition = testPosition;
         transform.localEulerAngles = testAngle;
@@ -76,11 +80,11 @@ public class AgentA : Agent
     public override void CollectObservations(VectorSensor sensor)
     {
         sensor.AddObservation(transform.localPosition);
-        sensor.AddObservation(transform.localEulerAngles);
     }
-
+    
     public override void OnActionReceived(ActionBuffers actions)
     {
+        timeStep += 1;
         int action = actions.DiscreteActions[0];
         if (action == 0) {
             return;
@@ -251,6 +255,11 @@ public class AgentA : Agent
         if (other.TryGetComponent<Goal>(out Goal goal))
         {
             SetReward(1f);
+            //debugSideChannel.SendDebugMessage(transform.localPosition.ToString() + transform.localEulerAngles.ToString());
+            //string message = transform.localPosition.ToString() + transform.localEulerAngles.ToString(); 
+            string positionString = $"{transform.localPosition.x:F2},{transform.localPosition.y:F2},{transform.localPosition.z:F2}";
+            // Combine both formatted strings with a "|" separator
+            debugSideChannel.SendDebugMessage(positionString);
             EndEpisode();
         }
     }

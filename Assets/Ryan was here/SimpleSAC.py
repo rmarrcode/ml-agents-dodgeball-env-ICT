@@ -121,7 +121,7 @@ class ReplayBuffer:
         return (states, actions, rewards, next_states, dones)
 
 class SACAgent(nn.Module):
-    def __init__(self, observation_size, action_size, hidden_size):
+    def __init__(self, observation_size, action_size, action_dim, hidden_size):
         super().__init__()
         self.critic1 = Critic(observation_size, action_size, hidden_size)
         self.critic2 = Critic(observation_size, action_size, hidden_size)
@@ -202,8 +202,6 @@ class Driver():
 
         with torch.no_grad():
             next_actions, next_log_probs = agent.actor(next_states)
-            print(f'next_states {next_states}')
-            print(f'next_actions {next_actions}')
             next_q1 = agent.target_critic1(next_states, next_actions)
             next_q2 = agent.target_critic2(next_states, next_actions)
             next_q = torch.min(next_q1, next_q2) - ALPHA * next_log_probs

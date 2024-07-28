@@ -18,7 +18,8 @@ public class AgentB : Agent
     public LayerMask agentMask;
     public float viewDistance = 100f;
     private DebugSideChannel debugSideChannel;
-
+    public int timeStep = 0;
+    
     void Start()
     {
         obstacleMask = LayerMask.GetMask("obstacleMask");
@@ -41,20 +42,18 @@ public class AgentB : Agent
             planeRenderer.material.color = new Color(0.23f, 0.23f, 0.23f, 1f); 
         }
         
-        debugSideChannel = new DebugSideChannel();
-        SideChannelManager.RegisterSideChannel(debugSideChannel);
+        //debugSideChannel = new DebugSideChannel();
+        //SideChannelManager.RegisterSideChannel(debugSideChannel);
     }
 
     private HashSet<Vector3> obstacles = new HashSet<Vector3>
     {
-        new Vector3(3f, 0f, 0f),
         new Vector3(3f, 0f, 1f),
         new Vector3(3f, 0f, 2f),
         new Vector3(3f, 0f, 3f),
         new Vector3(3f, 0f, 4f),
         new Vector3(3f, 0f, 5f),
         new Vector3(4f, 0f, 7f),
-        new Vector3(6f, 0f, 9f),
         new Vector3(6f, 0f, 8f),
         new Vector3(6f, 0f, 7f),
         new Vector3(6f, 0f, 6f),
@@ -65,8 +64,9 @@ public class AgentB : Agent
 
     public override void OnEpisodeBegin()
     {
-        Vector3 testPosition = new Vector3(4.5f, .5f, 1.5f);
+        Vector3 testPosition = new Vector3(-4.5f, .5f, 8.5f);
         Vector3 testAngle = new Vector3(0f, 180f, 0f);
+        timeStep = 0;
 
         transform.localPosition = testPosition;
         transform.localEulerAngles = testAngle;
@@ -82,10 +82,12 @@ public class AgentB : Agent
     {
         sensor.AddObservation(transform.localPosition);
         sensor.AddObservation(transform.localEulerAngles);
+        sensor.AddObservation((float)timeStep);
     }
 
     public override void OnActionReceived(ActionBuffers actions)
     {
+        timeStep += 1;
         int action = actions.DiscreteActions[0];
         if (action == 0) {
             return;
@@ -94,6 +96,7 @@ public class AgentB : Agent
         {
             return;
         }
+
         nextMoveTime = Time.time + moveCooldown;
         Vector3 currentPosition = transform.localPosition;
         float moveStep = 1f;

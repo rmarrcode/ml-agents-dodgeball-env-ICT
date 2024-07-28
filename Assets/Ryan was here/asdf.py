@@ -68,6 +68,7 @@ class Actor(nn.Module):
     def select_action_single(self, state):
         #state = torch.FloatTensor(state).unsqueeze(0)
         mu, log_std = self.forward(state)
+        print(f'mu {mu}')
         std = log_std.exp()
         
         normal = Normal(0, 1)
