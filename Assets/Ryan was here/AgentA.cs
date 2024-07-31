@@ -47,6 +47,7 @@ public class AgentA : Agent
 
     private HashSet<Vector3> obstacles = new HashSet<Vector3>
     {
+        new Vector3(3f, 0f, 0),
         new Vector3(3f, 0f, 1f),
         new Vector3(3f, 0f, 2f),
         new Vector3(3f, 0f, 3f),
@@ -254,7 +255,7 @@ public class AgentA : Agent
     {
         if (other.TryGetComponent<Goal>(out Goal goal))
         {
-            SetReward(1f);
+            SetReward(1000f);
             //debugSideChannel.SendDebugMessage(transform.localPosition.ToString() + transform.localEulerAngles.ToString());
             //string message = transform.localPosition.ToString() + transform.localEulerAngles.ToString(); 
             string positionString = $"{transform.localPosition.x:F2},{transform.localPosition.y:F2},{transform.localPosition.z:F2}";

@@ -48,6 +48,7 @@ public class AgentB : Agent
 
     private HashSet<Vector3> obstacles = new HashSet<Vector3>
     {
+        new Vector3(3f, 0f, 0),
         new Vector3(3f, 0f, 1f),
         new Vector3(3f, 0f, 2f),
         new Vector3(3f, 0f, 3f),

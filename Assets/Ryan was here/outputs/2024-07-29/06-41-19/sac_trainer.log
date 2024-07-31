@@ -1,0 +1,61 @@
+[2024-07-29 06:41:23,716][mlagents_envs.environment][INFO] - Connected to Unity environment with package version 2.1.0-exp.1 and communication version 1.5.0
+[2024-07-29 06:41:24,308][mlagents_envs.environment][INFO] - Connected new brain: AgentA?team=0
+[2024-07-29 06:41:24,316][mlagents_envs.environment][INFO] - Connected new brain: AgentB?team=1
+[2024-07-29 06:41:28,720][wandb.sdk.lib.retry][INFO] - Retry attempt failed:
+Traceback (most recent call last):
+  File "C:\Users\rmarr\Documents\python-envs\3.7.0\lib\site-packages\urllib3\connection.py", line 175, in _new_conn
+    (self._dns_host, self.port), self.timeout, **extra_kw
+  File "C:\Users\rmarr\Documents\python-envs\3.7.0\lib\site-packages\urllib3\util\connection.py", line 72, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+  File "C:\Users\rmarr\Downloads\3.7.0\lib\socket.py", line 748, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno 11001] getaddrinfo failed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\rmarr\Documents\python-envs\3.7.0\lib\site-packages\urllib3\connectionpool.py", line 710, in urlopen
+    chunked=chunked,
+  File "C:\Users\rmarr\Documents\python-envs\3.7.0\lib\site-packages\urllib3\connectionpool.py", line 386, in _make_request
+    self._validate_conn(conn)
+  File "C:\Users\rmarr\Documents\python-envs\3.7.0\lib\site-packages\urllib3\connectionpool.py", line 1042, in _validate_conn
+    conn.connect()
+  File "C:\Users\rmarr\Documents\python-envs\3.7.0\lib\site-packages\urllib3\connection.py", line 363, in connect
+    self.sock = conn = self._new_conn()
+  File "C:\Users\rmarr\Documents\python-envs\3.7.0\lib\site-packages\urllib3\connection.py", line 187, in _new_conn
+    self, "Failed to establish a new connection: %s" % e
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPSConnection object at 0x0000024745B7C978>: Failed to establish a new connection: [Errno 11001] getaddrinfo failed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\rmarr\Documents\python-envs\3.7.0\lib\site-packages\requests\adapters.py", line 497, in send
+    chunked=chunked,
+  File "C:\Users\rmarr\Documents\python-envs\3.7.0\lib\site-packages\urllib3\connectionpool.py", line 788, in urlopen
+    method, url, error=e, _pool=self, _stacktrace=sys.exc_info()[2]
+  File "C:\Users\rmarr\Documents\python-envs\3.7.0\lib\site-packages\urllib3\util\retry.py", line 592, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='api.wandb.ai', port=443): Max retries exceeded with url: /graphql (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x0000024745B7C978>: Failed to establish a new connection: [Errno 11001] getaddrinfo failed'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\rmarr\Documents\python-envs\3.7.0\lib\site-packages\wandb\sdk\lib\retry.py", line 131, in __call__
+    result = self._call_fn(*args, **kwargs)
+  File "C:\Users\rmarr\Documents\python-envs\3.7.0\lib\site-packages\wandb\sdk\internal\internal_api.py", line 345, in execute
+    return self.client.execute(*args, **kwargs)  # type: ignore
+  File "C:\Users\rmarr\Documents\python-envs\3.7.0\lib\site-packages\wandb\vendor\gql-0.2.0\wandb_gql\client.py", line 52, in execute
+    result = self._get_result(document, *args, **kwargs)
+  File "C:\Users\rmarr\Documents\python-envs\3.7.0\lib\site-packages\wandb\vendor\gql-0.2.0\wandb_gql\client.py", line 60, in _get_result
+    return self.transport.execute(document, *args, **kwargs)
+  File "C:\Users\rmarr\Documents\python-envs\3.7.0\lib\site-packages\wandb\sdk\lib\gql_request.py", line 58, in execute
+    request = self.session.post(self.url, **post_args)
+  File "C:\Users\rmarr\Documents\python-envs\3.7.0\lib\site-packages\requests\sessions.py", line 637, in post
+    return self.request("POST", url, data=data, json=json, **kwargs)
+  File "C:\Users\rmarr\Documents\python-envs\3.7.0\lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Users\rmarr\Documents\python-envs\3.7.0\lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Users\rmarr\Documents\python-envs\3.7.0\lib\site-packages\requests\adapters.py", line 519, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPSConnectionPool(host='api.wandb.ai', port=443): Max retries exceeded with url: /graphql (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x0000024745B7C978>: Failed to establish a new connection: [Errno 11001] getaddrinfo failed'))
