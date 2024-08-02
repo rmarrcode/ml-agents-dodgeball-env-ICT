@@ -1,3 +1,0 @@
-[2024-07-27 20:31:33,196][mlagents_envs.environment][INFO] - Connected to Unity environment with package version 2.1.0-exp.1 and communication version 1.5.0
-[2024-07-27 20:31:33,780][mlagents_envs.environment][INFO] - Connected new brain: AgentA?team=0
-[2024-07-27 20:31:33,781][mlagents_envs.environment][INFO] - Connected new brain: AgentB?team=1

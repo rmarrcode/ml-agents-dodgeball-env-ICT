@@ -17,7 +17,8 @@ class Actor(nn.Module):
     def forward(self, state):
         x = F.relu(self.fc1(state))
         x = F.relu(self.fc2(x))
-        x = F.softmax(self.fc3(x), dim=0)
+        x = self.fc3(x)
+        x = F.softmax(x, dim=-1)
         return x
 
     def get_action_nd(self, action_probs):
@@ -89,6 +90,10 @@ class ReplayBuffer:
         indices = np.random.choice(len(self.buffer), batch_size)
         states, actions, rewards, next_states, dones = zip(*[self.buffer[i] for i in indices])
         return (states, actions, rewards, next_states, dones)
+
+    def empty(self):
+        return zip(*[self.buffer[i] for i in range(len(self.buffer))])
+    
 
 class SACAgent(nn.Module):
     def __init__(self, observation_size, action_dim, hidden_size, learning_rate):
