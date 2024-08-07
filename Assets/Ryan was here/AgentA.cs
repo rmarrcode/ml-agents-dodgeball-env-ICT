@@ -190,13 +190,13 @@ public class AgentA : Agent
 
     public void Eliminate()
     {
-        SetReward(-1f);
+        SetReward(-1.0f);
         EndEpisode();
     }
 
     public void Tie()
     {
-        SetReward(0f);
+        SetReward(0.0f);
         EndEpisode();
     }
 
@@ -257,7 +257,7 @@ public class AgentA : Agent
     {
         if (other.TryGetComponent<Goal>(out Goal goal))
         {
-            SetReward(1000f);
+            SetReward(1.0f);
             //debugSideChannel.SendDebugMessage(transform.localPosition.ToString() + transform.localEulerAngles.ToString());
             //string message = transform.localPosition.ToString() + transform.localEulerAngles.ToString(); 
             string positionString = $"{transform.localPosition.x:F2},{transform.localPosition.y:F2},{transform.localPosition.z:F2}";

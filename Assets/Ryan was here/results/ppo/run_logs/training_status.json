@@ -1,4 +1,68 @@
 {
+    "AgentB": {
+        "checkpoints": [
+            {
+                "steps": 499970,
+                "file_path": "results\\ppo\\AgentB\\AgentB-499970.onnx",
+                "reward": -0.6,
+                "creation_time": 1723010565.0708492,
+                "auxillary_file_paths": [
+                    "results\\ppo\\AgentB\\AgentB-499970.pt"
+                ]
+            },
+            {
+                "steps": 999949,
+                "file_path": "results\\ppo\\AgentB\\AgentB-999949.onnx",
+                "reward": 0.342512908777969,
+                "creation_time": 1723056340.0508032,
+                "auxillary_file_paths": [
+                    "results\\ppo\\AgentB\\AgentB-999949.pt"
+                ]
+            },
+            {
+                "steps": 1000013,
+                "file_path": "results\\ppo\\AgentB\\AgentB-1000013.onnx",
+                "reward": 0.342512908777969,
+                "creation_time": 1723074031.1936014,
+                "auxillary_file_paths": [
+                    "results\\ppo\\AgentB\\AgentB-1000013.pt"
+                ]
+            }
+        ],
+        "elo": 1259.9515464397657,
+        "final_checkpoint": {
+            "steps": 1000013,
+            "file_path": "results\\ppo\\AgentB.onnx",
+            "reward": 0.342512908777969,
+            "creation_time": 1723074031.1936014,
+            "auxillary_file_paths": [
+                "results\\ppo\\AgentB\\AgentB-1000013.pt"
+            ]
+        }
+    },
+    "AgentA": {
+        "elo": 1198.5733145307568,
+        "checkpoints": [
+            {
+                "steps": 250038,
+                "file_path": "results\\ppo\\AgentA\\AgentA-250038.onnx",
+                "reward": null,
+                "creation_time": 1723074031.2426085,
+                "auxillary_file_paths": [
+                    "results\\ppo\\AgentA\\AgentA-250038.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 250038,
+            "file_path": "results\\ppo\\AgentA.onnx",
+            "reward": null,
+            "creation_time": 1723074031.2426085,
+            "auxillary_file_paths": [
+                "results\\ppo\\AgentA\\AgentA-250038.pt"
+            ]
+        }
+    },
     "metadata": {
         "stats_format_version": "0.3.0",
         "mlagents_version": "0.27.0",

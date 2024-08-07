@@ -191,13 +191,13 @@ public class AgentB : Agent
 
     public void Eliminate()
     {
-        SetReward(-1f);
+        SetReward(-1.0f);
         EndEpisode();
     }
 
     public void Tie()
     {
-        SetReward(0f);
+        SetReward(0.0f);
         EndEpisode();
     }
 
@@ -258,7 +258,7 @@ public class AgentB : Agent
     {
         if (other.TryGetComponent<Goal>(out Goal goal))
         {
-            SetReward(1f);
+            SetReward(1.0f);
             EndEpisode();
         }
     }
