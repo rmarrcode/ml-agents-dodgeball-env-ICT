@@ -1,0 +1,42 @@
+{
+    "name": "root",
+    "metadata": {
+        "timer_format_version": "0.1.0",
+        "start_time_seconds": "1723000253",
+        "python_version": "3.7.0 (v3.7.0:1bf9cc5093, Jun 27 2018, 04:59:51) [MSC v.1914 64 bit (AMD64)]",
+        "command_line_arguments": "C:\\Users\\rmarr\\Documents\\python-envs\\3.7.0\\Scripts\\mlagents-learn config\\sacagent.yaml --force",
+        "mlagents_version": "0.27.0",
+        "mlagents_envs_version": "0.27.0",
+        "communication_protocol_version": "1.5.0",
+        "pytorch_version": "1.7.1+cu110",
+        "numpy_version": "1.21.6",
+        "end_time_seconds": "1723000314"
+    },
+    "total": 61.339875199999994,
+    "count": 1,
+    "self": 0.011257399999998086,
+    "children": {
+        "run_training.setup": {
+            "total": 0.1219214999999998,
+            "count": 1,
+            "self": 0.1219214999999998
+        },
+        "TrainerController.start_learning": {
+            "total": 61.2066963,
+            "count": 1,
+            "self": 0.00010649999999401416,
+            "children": {
+                "TrainerController._reset_env": {
+                    "total": 61.2065718,
+                    "count": 1,
+                    "self": 61.2065718
+                },
+                "TrainerController._save_models": {
+                    "total": 1.800000000429236e-05,
+                    "count": 1,
+                    "self": 1.800000000429236e-05
+                }
+            }
+        }
+    }
+}

@@ -83,7 +83,9 @@ class Driver():
             if terminal_steps.reward[0] > 0:
                 final_state = self.debug_channel.get_last_state()
                 s_p = torch.tensor(final_state)
-        
+        print(f's {s}')
+        print(f'action {a_tens}')
+        print(f'sp {s_p}')
         return (s, a_tens, reward, s_p, done)
 
     def train(self, agent_id):

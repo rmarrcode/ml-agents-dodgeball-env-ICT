@@ -47,24 +47,26 @@ public class AgentA : Agent
 
     private HashSet<Vector3> obstacles = new HashSet<Vector3>
     {
-        new Vector3(3f, 0f, 0),
         new Vector3(3f, 0f, 1f),
         new Vector3(3f, 0f, 2f),
         new Vector3(3f, 0f, 3f),
         new Vector3(3f, 0f, 4f),
         new Vector3(3f, 0f, 5f),
+
         new Vector3(4f, 0f, 7f),
+
         new Vector3(6f, 0f, 8f),
         new Vector3(6f, 0f, 7f),
         new Vector3(6f, 0f, 6f),
         new Vector3(6f, 0f, 5f),
         new Vector3(6f, 0f, 4f),
+
         new Vector3(5f, 0f, 2f),
     };
 
     public override void OnEpisodeBegin()
     {
-        Vector3 testPosition = new Vector3(5.5f, .5f, 1.5f);
+        Vector3 testPosition = new Vector3(8.5f, .5f, 5.5f);
         Vector3 testAngle = new Vector3(0, 0, 0);
         timeStep = 0;
 
@@ -260,7 +262,7 @@ public class AgentA : Agent
             //string message = transform.localPosition.ToString() + transform.localEulerAngles.ToString(); 
             string positionString = $"{transform.localPosition.x:F2},{transform.localPosition.y:F2},{transform.localPosition.z:F2}";
             // Combine both formatted strings with a "|" separator
-            debugSideChannel.SendDebugMessage(positionString);
+            //debugSideChannel.SendDebugMessage(positionString);
             EndEpisode();
         }
     }

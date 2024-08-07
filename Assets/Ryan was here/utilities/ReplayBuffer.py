@@ -5,7 +5,7 @@ class ReplayBuffer:
 
     def __init__(self, environment, capacity=5000):
         transition_type_str = self.get_transition_type_str(environment)
-        self.buffer = np.zeros(capacity, dtype=transition_type_str)
+        self.buffer = np.zeros(capacity, dtype=tuple) #np.zeros(capacity, dtype=transition_type_str)
         self.weights = np.zeros(capacity)
         self.head_idx = 0
         self.count = 0
@@ -38,13 +38,21 @@ class ReplayBuffer:
     def sample_minibatch(self, size=100):
         set_weights = self.weights[:self.count] + self.delta
         probabilities = set_weights / sum(set_weights)
-        self.indices = np.random.choice(range(self.count), size, p=probabilities, replace=False)
+        self.indices = np.random.choice(range(self.count), size, p=probabilities, replace=True)
         return self.buffer[self.indices]
 
     def update_weights(self, prediction_errors):
         max_error = max(prediction_errors)
         self.max_weight = max(self.max_weight, max_error)
+
         self.weights[self.indices] = prediction_errors
 
     def get_size(self):
-        return self.count
+        return self.count 
+    
+    def print_buffer(self):
+        print(f'weights {self.weights}')
+        print(f'buffer {self.buffer}')
+    
+    
+    
