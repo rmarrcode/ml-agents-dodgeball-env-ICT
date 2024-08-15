@@ -43,6 +43,7 @@ behaviors:
       play_against_latest_model_ratio: 0.5
       initial_elo: 1200
     behavioral_cloning: null
+    
   AgentB:
     trainer_type: ppo
     hyperparameters:

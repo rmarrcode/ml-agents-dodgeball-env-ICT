@@ -297,7 +297,7 @@ namespace SWS
                 Handles.color = m_Color2.colorValue;
                 size = Mathf.Clamp(size, 0, 1.2f);
 
-                Handles.FreeMoveHandle(wpPos, Quaternion.identity, size, Vector3.zero, (controlID, position, rotation, hSize, eventType) => 
+                var fmh_300_47_638589276549193017 = Quaternion.identity; Handles.FreeMoveHandle(wpPos, size, Vector3.zero, (controlID, position, rotation, hSize, eventType) => 
                 {
                     Handles.SphereHandleCap(controlID, position, rotation, hSize, eventType);
                     if (Event.current.type == EventType.Layout && GUIUtility.hotControl != 0 && controlID == GUIUtility.hotControl)

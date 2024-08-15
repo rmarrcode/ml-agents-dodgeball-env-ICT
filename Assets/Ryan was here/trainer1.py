@@ -105,3 +105,5 @@ if __name__ == "__main__":
                 run_results.append(episode_reward)
         agent_results.append(run_results)
         wandb.log({"runs wins": run_reward})
+
+
